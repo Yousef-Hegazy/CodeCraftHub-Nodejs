@@ -41,9 +41,9 @@ async function ensureDataFile() {
 // Helper to compute statistics for courses by status
 function computeCourseStats(courses) {
   const byStatus = {
-    'Not Started': 0,
-    'In Progress': 0,
-    'Completed': 0
+    "Not Started": 0,
+    "In Progress": 0,
+    Completed: 0,
   };
 
   if (!Array.isArray(courses)) return { total: 0, byStatus };
@@ -56,7 +56,7 @@ function computeCourseStats(courses) {
 
   return {
     total: courses.length,
-    byStatus
+    byStatus,
   };
 }
 
@@ -210,19 +210,18 @@ app.get("/api/courses/:id", async (req, res) => {
 // PUT /api/courses
 // Update a course by id supplied in the request body
 // Expected body: { id, name, description, target_date, status }
-app.put("/api/courses", async (req, res) => {
+app.put("/api/courses/:id", async (req, res) => {
   try {
+    const id = parseInt(req.params.id, 10);
+    if (Number.isNaN(id)) {
+      return res.status(400).json({ error: "Invalid id" });
+    }
+
     const payload = req.body;
 
     // id is required to update
-    if (payload.id === undefined || payload.id === null) {
+    if (id === undefined || id === null) {
       return res.status(400).json({ error: "id is required for update" });
-    }
-
-    // Ensure id is a number
-    const id = Number(payload.id);
-    if (Number.isNaN(id)) {
-      return res.status(400).json({ error: "id must be a number" });
     }
 
     // Validate required fields (full update semantics)
@@ -313,13 +312,13 @@ app.listen(PORT, () => {
 
 // GET /api/courses/stats
 // Returns: { total: number, byStatus: { 'Not Started': number, 'In Progress': number, 'Completed': number } }
-app.get('/api/courses/stats', async (req, res) => {
+app.get("/api/courses/stats", async (req, res) => {
   try {
     const courses = await loadCourses();
     const stats = computeCourseStats(courses);
     res.json(stats);
   } catch (err) {
-    console.error('Error generating course stats:', err);
-    res.status(500).json({ error: 'Failed to compute statistics' });
+    console.error("Error generating course stats:", err);
+    res.status(500).json({ error: "Failed to compute statistics" });
   }
 });
