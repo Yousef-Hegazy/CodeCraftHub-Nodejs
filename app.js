@@ -139,6 +139,12 @@ ensureDataFile().catch((err) => {
 
 // Routes
 
+app.get('/', (req, res) => {
+    // __dirname points to the directory containing this file
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
+
+
 // POST /api/courses
 // Add a new course
 app.post("/api/courses", async (req, res) => {
@@ -305,10 +311,6 @@ app.get("/", (req, res) => {
   res.send("CodeCraftHub API is running on port 5000");
 });
 
-// Start the server
-app.listen(PORT, () => {
-  console.log(`CodeCraftHub server is listening on port ${PORT}`);
-});
 
 // GET /api/courses/stats
 // Returns: { total: number, byStatus: { 'Not Started': number, 'In Progress': number, 'Completed': number } }
@@ -321,4 +323,10 @@ app.get("/api/courses/stats", async (req, res) => {
     console.error("Error generating course stats:", err);
     res.status(500).json({ error: "Failed to compute statistics" });
   }
+});
+
+
+// Start the server
+app.listen(PORT, () => {
+  console.log(`CodeCraftHub server is listening on port ${PORT}`);
 });
