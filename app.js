@@ -140,8 +140,8 @@ ensureDataFile().catch((err) => {
 // Routes
 
 app.get('/', (req, res) => {
-    // __dirname points to the directory containing this file
-    res.sendFile(path.join(__dirname, 'index.html'));
+  // __dirname points to the directory containing this file
+  res.sendFile(path.join(__dirname, 'index.html'));
 });
 
 
